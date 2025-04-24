@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_catalog"
+        android:icon="@drawable/ic_catalog"
+        android:title="Каталог" />
+    <item
+        android:id="@+id/navigation_favorites"
+        android:icon="@drawable/ic_favorites"
+        android:title="Избранное" />
+</menu>
