@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.App.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_margin="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,32 +15,38 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/productImageView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="160dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_launcher_background" />
+                android:background="@drawable/image_placeholder_background"
+                android:contentDescription="@string/product_image_description"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <ImageButton
                 android:id="@+id/favoriteButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="top|end"
-                android:layout_margin="4dp"
-                android:background="@android:color/transparent"
+                android:layout_margin="8dp"
+                android:background="@drawable/icon_background_scrim"
+                android:padding="8dp"
                 android:src="@drawable/ic_favorite_border"
-                android:contentDescription="Добавить в избранное"
-                app:tint="?attr/colorOnPrimary"/>
+                app:tint="@color/white"
+                android:contentDescription="@string/add_to_favorites"/>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/productNameTextView"
@@ -49,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="16sp"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold"
                 tools:text="Название товара"/>
 
@@ -58,31 +64,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="2dp"
                 tools:text="₸1000.0"/>
 
             <TextView
                 android:id="@+id/productDescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"
-                tools:text="Краткое описание товара..."/>
+                android:visibility="gone"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/addToCartButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
                 android:layout_marginTop="8dp"
-                android:text="В корзину"
-                android:textSize="12sp"
-                app:icon="@android:drawable/ic_input_add"
-                app:iconPadding="4dp"
-                app:iconSize="16dp"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@string/add_to_cart"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
