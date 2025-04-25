@@ -39,7 +39,7 @@ class ProductAdapter(
         val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.productPriceTextView)
         val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
-        val addToCartButton: Button = itemView.findViewById(R.id.addToCartButton) // Button in list view
+        val addToCartButton: Button = itemView.findViewById(R.id.addToCartButton)
     }
 
     class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,7 +48,7 @@ class ProductAdapter(
         val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.productPriceTextView)
         val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
-        val addToCartButton: ImageButton = itemView.findViewById(R.id.addToCartButton) // ImageButton in grid view
+        val addToCartButton: ImageButton = itemView.findViewById(R.id.addToCartButton)
     }
 
     fun setViewType(viewType: Int) {
@@ -69,7 +69,7 @@ class ProductAdapter(
                     .inflate(R.layout.item_product_grid, parent, false)
                 GridViewHolder(view)
             }
-            else -> {
+            else -> { // VIEW_TYPE_LIST
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_product, parent, false)
                 ListViewHolder(view)
@@ -89,14 +89,32 @@ class ProductAdapter(
         }
     }
 
+    // --- Вспомогательный метод для установки плейсхолдера ---
+    private fun setProductPlaceholder(imageView: ImageView, product: Product) {
+        val context = imageView.context
+        val placeholderResId = when (product.category) {
+            "alcohol" -> R.drawable.ic_bottle_placeholder
+            "tobacco" -> R.drawable.ic_cigarette_placeholder
+            else -> R.drawable.ic_bottle_placeholder // Иконка по умолчанию, если категория неизвестна
+        }
+        imageView.setImageResource(placeholderResId)
+        // Устанавливаем фон и отступы, как в XML
+        imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.background_light)) // Или colorSurfaceVariant
+        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        val padding = (context.resources.displayMetrics.density * 8).toInt() // Примерно 8dp
+        imageView.setPadding(padding, padding, padding, padding)
+    }
+    // --- Конец вспомогательного метода ---
+
+
     private fun bindListViewHolder(holder: ListViewHolder, product: Product, position: Int) {
         holder.nameTextView.text = product.name
         holder.descriptionTextView.text = product.description
         holder.priceTextView.text = "₸${product.price}"
 
-        holder.imageView.setImageResource(R.drawable.ic_launcher_background)
-        holder.imageView.setBackgroundResource(R.drawable.image_placeholder_background)
-
+        // --- Установка плейсхолдера ---
+        setProductPlaceholder(holder.imageView, product)
+        // TODO: Замените это на реальную загрузку изображений (Glide, Picasso)
 
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 
@@ -115,8 +133,9 @@ class ProductAdapter(
         holder.descriptionTextView.text = product.description
         holder.priceTextView.text = "₸${product.price}"
 
-        holder.imageView.setImageResource(R.drawable.ic_launcher_background)
-        holder.imageView.setBackgroundResource(R.drawable.image_placeholder_background)
+        // --- Установка плейсхолдера ---
+        setProductPlaceholder(holder.imageView, product)
+        // TODO: Замените это на реальную загрузку изображений (Glide, Picasso)
 
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 
@@ -146,6 +165,7 @@ class ProductAdapter(
     private fun updateFavoriteIcon(button: ImageButton, isFavorite: Boolean) {
         val context = button.context
         button.setImageResource(if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+
         val colorResId = if (isFavorite) {
             R.color.red
         } else {
@@ -157,7 +177,6 @@ class ProductAdapter(
         }
         button.setColorFilter(ContextCompat.getColor(context, colorResId))
     }
-
 
     override fun getItemCount() = products.size
 }

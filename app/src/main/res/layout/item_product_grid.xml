@@ -21,10 +21,11 @@
                 android:id="@+id/productImageView"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_placeholder_background"
-                android:contentDescription="@string/product_image_description"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                android:scaleType="centerInside"
+                android:padding="16dp"
+                android:background="?attr/colorSurfaceVariant"
+                app:srcCompat="@drawable/ic_bottle_placeholder"
+                android:contentDescription="@string/product_image_description" />
 
             <ImageButton
                 android:id="@+id/favoriteButton"
@@ -55,7 +56,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="15sp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/colorOnSurface"
                 android:textStyle="bold"
                 tools:text="Название товара"/>
 
@@ -64,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:layout_marginTop="2dp"
                 tools:text="₸1000.0"/>
 
