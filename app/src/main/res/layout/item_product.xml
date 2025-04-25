@@ -2,9 +2,13 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
@@ -19,8 +23,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_launcher_background" />
-
+            tools:src="@drawable/ic_launcher_background" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -33,14 +36,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Название товара"/>
 
             <TextView
                 android:id="@+id/productDescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                android:layout_marginTop="4dp"
+                tools:text="Краткое описание товара, которое может быть достаточно длинным."/>
 
             <TextView
                 android:id="@+id/productPriceTextView"
@@ -48,13 +56,28 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"
+                tools:text="₸1000.0"/>
+
+            <Button
+                android:id="@+id/addToCartButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="В корзину"
+                android:textSize="12sp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconPadding="4dp"
+                app:iconSize="16dp"/>
+
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/favoriteButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_gravity="top"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_favorite_border"
             android:contentDescription="Добавить в избранное" />

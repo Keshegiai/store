@@ -9,6 +9,10 @@
         android:icon="@drawable/ic_favorites"
         android:title="Избранное" />
     <item
+        android:id="@+id/navigation_cart"
+        android:icon="@drawable/ic_cart"
+        android:title="Корзина" />
+    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_profile"
         android:title="Профиль" />
