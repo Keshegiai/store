@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun refreshCatalog() {
-        if (catalogFragment.isAdded) {
-            catalogFragment.updateFavoriteStatus()
+        if (catalogFragment.isAdded && catalogFragment.isVisible) {
+            catalogFragment.refreshDataAndView()
         }
     }
 

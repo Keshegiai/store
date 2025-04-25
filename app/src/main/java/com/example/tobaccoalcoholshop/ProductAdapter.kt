@@ -9,24 +9,24 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tobaccoalcoholshop.R
 
-/**
- * Адаптер для отображения списка продуктов в RecyclerView.
- *
- * @param products Список продуктов для отображения
- * @param favoriteService Сервис для управления избранными продуктами
- * @param listener Слушатель изменений статуса избранного
- */
 class ProductAdapter(
     private val products: MutableList<Product>,
     private val favoriteService: FavoriteService,
     private val listener: OnFavoriteChangedListener? = null
-) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val VIEW_TYPE_LIST = 1
+        const val VIEW_TYPE_GRID = 2
+    }
+
+    private var currentViewType = VIEW_TYPE_LIST
 
     interface OnFavoriteChangedListener {
         fun onFavoriteChanged()
     }
 
-    class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.productImageView)
         val nameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
         val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
@@ -34,20 +34,54 @@ class ProductAdapter(
         val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_product, parent, false)
-        return ProductViewHolder(view)
+    class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.findViewById(R.id.productImageView)
+        val nameTextView: TextView = itemView.findViewById(R.id.productNameTextView)
+        val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
+        val priceTextView: TextView = itemView.findViewById(R.id.productPriceTextView)
+        val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val product = products[position]
+    fun setViewType(viewType: Int) {
+        if (currentViewType != viewType) {
+            currentViewType = viewType
+            notifyDataSetChanged()
+        }
+    }
 
+    override fun getItemViewType(position: Int): Int {
+        return currentViewType
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_GRID -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_product_grid, parent, false)
+                GridViewHolder(view)
+            }
+            else -> {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_product, parent, false)
+                ListViewHolder(view)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val product = products[position]
         product.isFavorite = favoriteService.isFavorite(product.id)
 
+        when (holder) {
+            is ListViewHolder -> bindListViewHolder(holder, product, position)
+            is GridViewHolder -> bindGridViewHolder(holder, product, position)
+        }
+    }
+
+    private fun bindListViewHolder(holder: ListViewHolder, product: Product, position: Int) {
         holder.nameTextView.text = product.name
         holder.descriptionTextView.text = product.description
-        holder.priceTextView.text = "KZT ${product.price}"
+        holder.priceTextView.text = "₽${product.price}"
 
         holder.imageView.setImageResource(
             when (product.category) {
@@ -62,7 +96,22 @@ class ProductAdapter(
         holder.favoriteButton.setOnClickListener {
             toggleFavorite(position)
         }
-
+    }
+    private fun bindGridViewHolder(holder: GridViewHolder, product: Product, position: Int) {
+        holder.nameTextView.text = product.name
+        holder.descriptionTextView.text = product.description
+        holder.priceTextView.text = "₽${product.price}"
+        holder.imageView.setImageResource(
+            when (product.category) {
+                "alcohol" -> R.drawable.ic_launcher_background
+                "tobacco" -> R.drawable.ic_launcher_background
+                else -> R.drawable.ic_launcher_background
+            }
+        )
+        updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
+        holder.favoriteButton.setOnClickListener {
+            toggleFavorite(position)
+        }
     }
 
     private fun toggleFavorite(position: Int) {

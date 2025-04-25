@@ -56,17 +56,18 @@ class FavoritesFragment : Fragment() {
 
         val favoriteIds = favoriteService.getFavoriteIds()
         val allProducts = createSampleProducts()
-
         favoriteProducts.addAll(allProducts.filter { product ->
             favoriteIds.contains(product.id)
         })
 
-        productAdapter.notifyDataSetChanged()
+        if (::productAdapter.isInitialized) {
+            productAdapter.notifyDataSetChanged()
+        }
 
-        if (favoriteProducts.isEmpty()) {
+        if (favoriteProducts.isEmpty() && ::emptyTextView.isInitialized) {
             emptyTextView.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
-        } else {
+        } else if (::emptyTextView.isInitialized) {
             emptyTextView.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
         }
