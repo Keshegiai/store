@@ -36,6 +36,11 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("androidx.cardview:cardview:1.0.0")
+    implementation ("com.google.code.gson:gson:2.9.0")
+    implementation ("androidx.fragment:fragment-ktx:1.5.5")
+    implementation ("com.google.android.material:material:1.9.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
