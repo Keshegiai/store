@@ -81,7 +81,7 @@ class ProductAdapter(
     private fun bindListViewHolder(holder: ListViewHolder, product: Product, position: Int) {
         holder.nameTextView.text = product.name
         holder.descriptionTextView.text = product.description
-        holder.priceTextView.text = "₽${product.price}"
+        holder.priceTextView.text = "₸ ${product.price}"
 
         holder.imageView.setImageResource(
             when (product.category) {
