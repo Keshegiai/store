@@ -8,4 +8,8 @@
         android:id="@+id/navigation_favorites"
         android:icon="@drawable/ic_favorites"
         android:title="Избранное" />
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="Профиль" />
 </menu>

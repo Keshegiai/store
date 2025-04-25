@@ -1,21 +1,45 @@
 package com.example.tobaccoalcoholshop
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.example.tobaccoalcoholshop.R
+
+// Убедитесь, что импорты ваших фрагментов и LoginActivity правильные
+// import com.example.lab7_1.CatalogFragment
+// import com.example.lab7_1.FavoritesFragment
+// import com.example.lab7_1.ProfileFragment
+// import com.example.lab7_1.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
-    private val catalogFragment = CatalogFragment()
-    private val favoritesFragment = FavoritesFragment()
+    private val catalogFragment by lazy { CatalogFragment() }
+    private val favoritesFragment by lazy { FavoritesFragment() }
+    private lateinit var profileFragment: ProfileFragment
+
+    private var currentUsername: String? = null
+    private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
+    private val LOGGED_IN_USER_KEY = "logged_in_username"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prefs = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
+        currentUsername = prefs.getString(LOGGED_IN_USER_KEY, null)
+
+        if (currentUsername == null) {
+            navigateToLogin()
+            return
+        }
+
         setContentView(R.layout.activity_main)
+
+        profileFragment = ProfileFragment.newInstance(currentUsername!!)
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
         setupBottomNavigation()
 
         if (savedInstanceState == null) {
@@ -25,21 +49,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        bottomNavigationView = findViewById(R.id.bottom_navigation)
-
         bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_catalog -> {
-                    switchToFragment(catalogFragment)
-                    true
-                }
-                R.id.navigation_favorites -> {
-                    switchToFragment(favoritesFragment)
-                    true
-                }
-                else -> false
+            val selectedFragment: Fragment = when (item.itemId) {
+                R.id.navigation_catalog -> catalogFragment
+                R.id.navigation_favorites -> favoritesFragment
+                R.id.navigation_profile -> profileFragment
+                else -> catalogFragment
             }
+            switchToFragment(selectedFragment)
+            true
         }
+        bottomNavigationView.setOnItemReselectedListener { /* No action */ }
     }
 
     private fun switchToFragment(fragment: Fragment) {
@@ -47,25 +67,27 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
-
     fun refreshFavorites() {
         if (favoritesFragment.isAdded) {
             favoritesFragment.loadFavoriteProducts()
         }
     }
-
     fun refreshCatalog() {
         if (catalogFragment.isAdded && catalogFragment.isVisible) {
             catalogFragment.refreshDataAndView()
         }
     }
 
-    override fun onBackPressed() {
-        if (bottomNavigationView.selectedItemId != R.id.navigation_catalog) {
-            bottomNavigationView.selectedItemId = R.id.navigation_catalog
-        } else {
-            super.onBackPressed()
-        }
+    fun logoutUser() {
+        val prefs = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
+        prefs.edit().remove(LOGGED_IN_USER_KEY).apply()
+        navigateToLogin()
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }
-

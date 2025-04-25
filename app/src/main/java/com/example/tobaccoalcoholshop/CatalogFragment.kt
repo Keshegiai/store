@@ -217,8 +217,6 @@ class CatalogFragment : Fragment() {
                 it.name.contains(currentSearchQuery, ignoreCase = true)
             }
         }
-
-        // 3. Сортируем результат
         val sortedList = if (isAscendingSortOrder) {
             searchFilteredList.sortedBy { it.price }
         } else {
