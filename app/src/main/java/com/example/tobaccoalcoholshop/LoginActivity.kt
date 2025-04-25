@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.tobaccoalcoholshop.data.User
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
