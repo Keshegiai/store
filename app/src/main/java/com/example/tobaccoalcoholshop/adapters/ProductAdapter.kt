@@ -13,6 +13,7 @@ import com.example.tobaccoalcoholshop.data.Product
 import com.example.tobaccoalcoholshop.services.CartService
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
 class ProductAdapter(
     private val products: MutableList<Product>,
@@ -38,7 +39,7 @@ class ProductAdapter(
         val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.productPriceTextView)
         val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
-        val addToCartButton: Button = itemView.findViewById(R.id.addToCartButton) // Добавлено
+        val addToCartButton: Button = itemView.findViewById(R.id.addToCartButton) // Button in list view
     }
 
     class GridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,7 +48,7 @@ class ProductAdapter(
         val descriptionTextView: TextView = itemView.findViewById(R.id.productDescriptionTextView)
         val priceTextView: TextView = itemView.findViewById(R.id.productPriceTextView)
         val favoriteButton: ImageButton = itemView.findViewById(R.id.favoriteButton)
-        val addToCartButton: Button = itemView.findViewById(R.id.addToCartButton) // Добавлено
+        val addToCartButton: ImageButton = itemView.findViewById(R.id.addToCartButton) // ImageButton in grid view
     }
 
     fun setViewType(viewType: Int) {
@@ -93,12 +94,16 @@ class ProductAdapter(
         holder.descriptionTextView.text = product.description
         holder.priceTextView.text = "₸${product.price}"
 
-        holder.imageView.setImageResource(R.drawable.ic_launcher_background) // Замените
+        holder.imageView.setImageResource(R.drawable.ic_launcher_background)
+        holder.imageView.setBackgroundResource(R.drawable.image_placeholder_background)
+
+
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 
         holder.favoriteButton.setOnClickListener {
             toggleFavorite(position)
         }
+
         holder.addToCartButton.setOnClickListener {
             cartService.addItem(product)
             Toast.makeText(holder.itemView.context, "${product.name} добавлен в корзину", Toast.LENGTH_SHORT).show()
@@ -111,6 +116,8 @@ class ProductAdapter(
         holder.priceTextView.text = "₸${product.price}"
 
         holder.imageView.setImageResource(R.drawable.ic_launcher_background)
+        holder.imageView.setBackgroundResource(R.drawable.image_placeholder_background)
+
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 
         holder.favoriteButton.setOnClickListener {
@@ -121,7 +128,6 @@ class ProductAdapter(
             cartService.addItem(product)
             Toast.makeText(holder.itemView.context, "${product.name} добавлен в корзину", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun toggleFavorite(position: Int) {
@@ -138,8 +144,20 @@ class ProductAdapter(
     }
 
     private fun updateFavoriteIcon(button: ImageButton, isFavorite: Boolean) {
+        val context = button.context
         button.setImageResource(if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+        val colorResId = if (isFavorite) {
+            R.color.red
+        } else {
+            if (currentViewType == VIEW_TYPE_GRID) {
+                R.color.white
+            } else {
+                R.color.text_secondary
+            }
+        }
+        button.setColorFilter(ContextCompat.getColor(context, colorResId))
     }
+
 
     override fun getItemCount() = products.size
 }
