@@ -6,27 +6,46 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class FavoriteService(context: Context) {
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences("favorites_prefs", Context.MODE_PRIVATE)
+
+    private val prefs: SharedPreferences
     private val gson = Gson()
     private val FAVORITES_KEY = "favorite_ids"
 
+    private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
+    private val LOGGED_IN_USER_KEY = "logged_in_username"
+
+    init {
+        val credentialPrefs = context.getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
+        val username = credentialPrefs.getString(LOGGED_IN_USER_KEY, null)
+
+        if (username == null) {
+            throw IllegalStateException("FavoriteService cannot be initialized without a logged-in user.")
+        } else {
+            val prefsName = "favorites_prefs_$username"
+            prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        }
+    }
+
     fun getFavoriteIds(): Set<Int> {
-        val json = sharedPreferences.getString(FAVORITES_KEY, null) ?: return emptySet()
-        val type = object : TypeToken<Set<Int>>() {}.type
-        return gson.fromJson(json, type) ?: emptySet()
+        val json = prefs.getString(FAVORITES_KEY, null)
+        return if (json != null) {
+            val type = object : TypeToken<Set<Int>>() {}.type
+            gson.fromJson(json, type) ?: emptySet()
+        } else {
+            emptySet()
+        }
     }
 
     fun addToFavorites(productId: Int) {
-        val currentFavorites = getFavoriteIds().toMutableSet()
-        currentFavorites.add(productId)
-        saveFavorites(currentFavorites)
+        val favorites = getFavoriteIds().toMutableSet()
+        favorites.add(productId)
+        saveFavorites(favorites)
     }
 
     fun removeFromFavorites(productId: Int) {
-        val currentFavorites = getFavoriteIds().toMutableSet()
-        currentFavorites.remove(productId)
-        saveFavorites(currentFavorites)
+        val favorites = getFavoriteIds().toMutableSet()
+        favorites.remove(productId)
+        saveFavorites(favorites)
     }
 
     fun isFavorite(productId: Int): Boolean {
@@ -35,6 +54,10 @@ class FavoriteService(context: Context) {
 
     private fun saveFavorites(favorites: Set<Int>) {
         val json = gson.toJson(favorites)
-        sharedPreferences.edit().putString(FAVORITES_KEY, json).apply()
+        prefs.edit().putString(FAVORITES_KEY, json).apply()
+    }
+
+    fun clearUserFavorites() {
+        prefs.edit().clear().apply()
     }
 }

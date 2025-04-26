@@ -9,9 +9,24 @@ import com.example.tobaccoalcoholshop.data.Product
 
 class CartService(context: Context) {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences("cart_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences
     private val gson = Gson()
     private val CART_KEY = "cart_items"
+
+    private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
+    private val LOGGED_IN_USER_KEY = "logged_in_username"
+
+    init {
+        val credentialPrefs = context.getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
+        val username = credentialPrefs.getString(LOGGED_IN_USER_KEY, null)
+
+        if (username == null) {
+            throw IllegalStateException("CartService cannot be initialized without a logged-in user.")
+        } else {
+            val prefsName = "cart_prefs_$username"
+            prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+        }
+    }
 
     fun getCartItems(): MutableList<CartItem> {
         val json = prefs.getString(CART_KEY, null)
@@ -73,5 +88,9 @@ class CartService(context: Context) {
     private fun saveCart(items: List<CartItem>) {
         val json = gson.toJson(items)
         prefs.edit().putString(CART_KEY, json).apply()
+    }
+
+    fun clearUserCart() {
+        prefs.edit().clear().apply()
     }
 }
