@@ -89,22 +89,19 @@ class ProductAdapter(
         }
     }
 
-    // --- Вспомогательный метод для установки плейсхолдера ---
     private fun setProductPlaceholder(imageView: ImageView, product: Product) {
         val context = imageView.context
         val placeholderResId = when (product.category) {
             "alcohol" -> R.drawable.ic_bottle_placeholder
             "tobacco" -> R.drawable.ic_cigarette_placeholder
-            else -> R.drawable.ic_bottle_placeholder // Иконка по умолчанию, если категория неизвестна
+            else -> R.drawable.ic_bottle_placeholder
         }
         imageView.setImageResource(placeholderResId)
-        // Устанавливаем фон и отступы, как в XML
         imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.background_light)) // Или colorSurfaceVariant
         imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
         val padding = (context.resources.displayMetrics.density * 8).toInt() // Примерно 8dp
         imageView.setPadding(padding, padding, padding, padding)
     }
-    // --- Конец вспомогательного метода ---
 
 
     private fun bindListViewHolder(holder: ListViewHolder, product: Product, position: Int) {
@@ -112,9 +109,7 @@ class ProductAdapter(
         holder.descriptionTextView.text = product.description
         holder.priceTextView.text = "₸${product.price}"
 
-        // --- Установка плейсхолдера ---
         setProductPlaceholder(holder.imageView, product)
-        // TODO: Замените это на реальную загрузку изображений (Glide, Picasso)
 
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 
@@ -133,9 +128,8 @@ class ProductAdapter(
         holder.descriptionTextView.text = product.description
         holder.priceTextView.text = "₸${product.price}"
 
-        // --- Установка плейсхолдера ---
         setProductPlaceholder(holder.imageView, product)
-        // TODO: Замените это на реальную загрузку изображений (Glide, Picasso)
+
 
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 

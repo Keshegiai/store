@@ -6,16 +6,16 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tobaccoalcoholshop.data.CartItem
 import com.example.tobaccoalcoholshop.R
 
 class CartAdapter(
     private val cartItems: MutableList<CartItem>,
-    private val listener: CartItemListener // Интерфейс для обратной связи с фрагментом
+    private val listener: CartItemListener
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
-    // Интерфейс для обработки действий пользователя в элементе корзины
     interface CartItemListener {
         fun onIncrementClicked(item: CartItem)
         fun onDecrementClicked(item: CartItem)
@@ -39,18 +39,30 @@ class CartAdapter(
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        // Проверка валидности позиции
         if (position < 0 || position >= cartItems.size) return
 
         val item = cartItems[position]
+        val product = item.product
+        val context = holder.itemView.context
 
-        holder.nameTextView.text = item.product.name
-        // Отображаем цену за штуку и количество
-        holder.priceTextView.text = "₸${item.product.price} x ${item.quantity}"
+        holder.nameTextView.text = product.name
+        holder.priceTextView.text = "₸${product.price} x ${item.quantity}"
         holder.quantityTextView.text = item.quantity.toString()
-        holder.imageView.setImageResource(R.drawable.ic_launcher_background) // Замените
 
-        // Установка слушателей для кнопок
+        val placeholderResId = when (product.category) {
+            "alcohol" -> R.drawable.ic_bottle_placeholder
+            "tobacco" -> R.drawable.ic_cigarette_placeholder
+            else -> R.drawable.ic_bottle_placeholder
+        }
+        holder.imageView.setImageResource(placeholderResId)
+
+        holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.background_light))
+        holder.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+        val padding = (context.resources.displayMetrics.density * 8).toInt()
+        holder.imageView.setPadding(padding, padding, padding, padding)
+        holder.imageView.imageTintList = null
+
+
         holder.incrementButton.setOnClickListener {
             listener.onIncrementClicked(item)
         }
@@ -64,10 +76,9 @@ class CartAdapter(
 
     override fun getItemCount(): Int = cartItems.size
 
-    // Метод для обновления данных в адаптере
     fun updateItems(newItems: List<CartItem>) {
         cartItems.clear()
         cartItems.addAll(newItems)
-        notifyDataSetChanged() // Уведомляем RecyclerView об изменениях
+        notifyDataSetChanged()
     }
 }
