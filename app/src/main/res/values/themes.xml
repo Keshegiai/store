@@ -24,6 +24,11 @@
 
     </style>
 
+    <style name="ShapeAppearance.App.ProductImage" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <style name="Theme.Tobaccoalcoholshop" parent="Base.Theme.Tobaccoalcoholshop" />
 
     <style name="Widget.App.CardView" parent="Widget.Material3.CardView.Outlined">

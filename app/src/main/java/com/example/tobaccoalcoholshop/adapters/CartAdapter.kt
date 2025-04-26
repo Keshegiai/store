@@ -56,13 +56,6 @@ class CartAdapter(
         }
         holder.imageView.setImageResource(placeholderResId)
 
-        holder.imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.background_light))
-        holder.imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-        val padding = (context.resources.displayMetrics.density * 8).toInt()
-        holder.imageView.setPadding(padding, padding, padding, padding)
-        holder.imageView.imageTintList = null
-
-
         holder.incrementButton.setOnClickListener {
             listener.onIncrementClicked(item)
         }

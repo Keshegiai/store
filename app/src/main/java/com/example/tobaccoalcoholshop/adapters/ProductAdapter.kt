@@ -97,10 +97,6 @@ class ProductAdapter(
             else -> R.drawable.ic_bottle_placeholder
         }
         imageView.setImageResource(placeholderResId)
-        imageView.setBackgroundColor(ContextCompat.getColor(context, R.color.background_light)) // Или colorSurfaceVariant
-        imageView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-        val padding = (context.resources.displayMetrics.density * 8).toInt() // Примерно 8dp
-        imageView.setPadding(padding, padding, padding, padding)
     }
 
 
@@ -129,7 +125,6 @@ class ProductAdapter(
         holder.priceTextView.text = "₸${product.price}"
 
         setProductPlaceholder(holder.imageView, product)
-
 
         updateFavoriteIcon(holder.favoriteButton, product.isFavorite)
 

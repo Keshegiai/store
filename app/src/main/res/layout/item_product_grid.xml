@@ -17,15 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/productImageView"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:scaleType="centerInside"
-                android:padding="16dp"
-                android:background="?attr/colorSurfaceVariant"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_bottle_placeholder"
-                android:contentDescription="@string/product_image_description" />
+                android:contentDescription="@string/product_image_description"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.ProductImage"
+            />
 
             <ImageButton
                 android:id="@+id/favoriteButton"

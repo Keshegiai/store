@@ -17,15 +17,18 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/cartItemImageView"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_bottle_placeholder"
+            android:contentDescription="@string/product_image_description"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.ProductImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@drawable/ic_launcher_background"/>
+        />
 
         <TextView
             android:id="@+id/cartItemNameTextView"
