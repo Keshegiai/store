@@ -21,7 +21,7 @@
                 android:id="@+id/productImageView"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_bottle_placeholder"
                 android:contentDescription="@string/product_image_description"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.App.ProductImage"

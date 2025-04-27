@@ -1,110 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    app:cardCornerRadius="4dp"
-    app:cardElevation="2dp">
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/cart_item_background"
+    android:padding="16dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/cartItemImageView"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/ic_bottle_placeholder"
-            android:contentDescription="@string/product_image_description"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.ProductImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/cartItemImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/ic_bottle_placeholder"
+        android:contentDescription="@string/product_image_description"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.ProductImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
-        <TextView
-            android:id="@+id/cartItemNameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/cartItemImageView"
-            app:layout_constraintTop_toTopOf="@id/cartItemImageView"
-            app:layout_constraintEnd_toStartOf="@+id/cartItemRemoveButton"
-            tools:text="Название товара очень длинное"/>
+    <TextView
+        android:id="@+id/cartItemNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@id/cartItemImageView"
+        app:layout_constraintTop_toTopOf="@id/cartItemImageView"
+        app:layout_constraintEnd_toStartOf="@id/cartItemRemoveButton"
+        tools:text="Название товара"/>
 
-        <TextView
-            android:id="@+id/cartItemPriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/cartItemImageView"
-            app:layout_constraintTop_toBottomOf="@id/cartItemNameTextView"
-            tools:text="₸15000.0 x 2"/>
+    <TextView
+        android:id="@+id/cartItemPriceTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        app:layout_constraintStart_toStartOf="@id/cartItemNameTextView"
+        app:layout_constraintTop_toBottomOf="@id/cartItemNameTextView"
+        app:layout_constraintEnd_toEndOf="@id/cartItemNameTextView"
+        tools:text="₸1000.0 x 1"/>
+
+    <ImageButton
+        android:id="@+id/cartItemRemoveButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_delete"
+        app:tint="@color/cart_remove_icon_tint_selector"
+        android:contentDescription="Удалить товар"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/quantityControlLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@id/cartItemRemoveButton"
+        app:layout_constraintBottom_toBottomOf="@id/cartItemImageView"
+        >
 
         <ImageButton
-            android:id="@+id/cartItemRemoveButton"
+            android:id="@+id/cartItemDecrementButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:src="@android:drawable/ic_menu_delete"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?android:attr/textColorSecondary"
-            android:contentDescription="Удалить товар"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:src="@drawable/ic_remove"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="Уменьшить количество"/>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/cartItemQuantityTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cartItemRemoveButton"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:minWidth="30dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            tools:text="1"/>
 
-            <ImageButton
-                android:id="@+id/cartItemDecrementButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/arrow_down_float"
-                app:tint="?attr/colorPrimary"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Уменьшить количество"/>
+        <ImageButton
+            android:id="@+id/cartItemIncrementButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="Увеличить количество"/>
 
-            <TextView
-                android:id="@+id/cartItemQuantityTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="30dp"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="1"/>
+    </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/cartItemIncrementButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@android:drawable/arrow_up_float"
-                app:tint="?attr/colorPrimary"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Увеличить количество"/>
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
