@@ -21,7 +21,7 @@ class FavoritesFragment : Fragment() {
     private lateinit var emptyTextView: TextView
     private lateinit var productAdapter: ProductAdapter
     private lateinit var favoriteService: FavoriteService
-    private lateinit var cartService: CartService // Нужен для ProductAdapter
+    private lateinit var cartService: CartService
 
     private val favoriteProducts = mutableListOf<Product>()
 
@@ -37,34 +37,30 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         favoriteService = FavoriteService(requireContext())
-        cartService = CartService(requireContext()) // Инициализируем CartService
+        cartService = CartService(requireContext())
 
         recyclerView = view.findViewById(R.id.favoritesRecyclerView)
         emptyTextView = view.findViewById(R.id.emptyFavoritesTextView)
 
         setupRecyclerView()
-        loadFavoriteProducts() // Загружаем данные при создании View
+        loadFavoriteProducts()
     }
 
     override fun onResume() {
         super.onResume()
-        // Обновляем список при возвращении на экран
         loadFavoriteProducts()
     }
 
     private fun setupRecyclerView() {
-        // Создаем адаптер, если он еще не создан
         if (!::productAdapter.isInitialized) {
             productAdapter = ProductAdapter(
-                favoriteProducts, // Передаем список избранных
+                favoriteProducts,
                 favoriteService,
-                cartService,      // Передаем CartService
+                cartService,
                 object : ProductAdapter.OnFavoriteChangedListener {
                     override fun onFavoriteChanged() {
-                        // Когда избранное меняется ЗДЕСЬ (т.е. товар удаляется из избранного),
-                        // нужно обновить этот список и уведомить каталог
-                        loadFavoriteProducts() // Обновляем текущий список
-                        (activity as? MainActivity)?.refreshCatalog() // Уведомляем каталог
+                        loadFavoriteProducts()
+                        (activity as? MainActivity)?.refreshCatalog()
                     }
                 }
             )
@@ -76,16 +72,12 @@ class FavoritesFragment : Fragment() {
     }
 
     fun loadFavoriteProducts() {
-        if (!isAdded || context == null) return // Проверка готовности фрагмента
+        if (!isAdded || context == null) return
 
         favoriteProducts.clear()
         val favoriteIds = favoriteService.getFavoriteIds()
-        // ВАЖНО: Получаем ТОТ ЖЕ САМЫЙ базовый список продуктов, что и в CatalogFragment
         val allProducts = createSampleProducts()
-
         favoriteProducts.addAll(allProducts.filter { favoriteIds.contains(it.id) })
-
-        // Обновляем адаптер, если он инициализирован
         if (::productAdapter.isInitialized) {
             productAdapter.notifyDataSetChanged()
         }
@@ -106,8 +98,6 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    // ВАЖНО: Этот метод должен возвращать ТОТ ЖЕ список продуктов, что и в CatalogFragment.
-    // В идеале, его нужно вынести в общий репозиторий или источник данных.
     private fun createSampleProducts(): List<Product> {
         return listOf(
             Product(1,"Marlboro Red","Классические сигареты с насыщенным вкусом",950.0,"","tobacco"),

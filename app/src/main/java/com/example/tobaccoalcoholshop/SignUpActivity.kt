@@ -17,7 +17,6 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var edConfirmPassword: EditText
     private lateinit var btnCreateUser: Button
     private lateinit var btnBack: Button
-
     private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
     private val USERS_KEY = "users"
 
@@ -36,23 +35,39 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         btnCreateUser.setOnClickListener {
-            val username = edUsername.text.toString().trim()
-            val password = edPassword.text.toString().trim()
-            val confirmPassword = edConfirmPassword.text.toString().trim()
+            val username = edUsername.text.toString()
+            val password = edPassword.text.toString()
+            val confirmPassword = edConfirmPassword.text.toString()
 
             if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Все поля должны быть заполнены и не должны быть пустыми", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (username.length < 4) {
+
+            if (username.contains(" ") || password.contains(" ") || confirmPassword.contains(" ")) {
+                Toast.makeText(this, "Имя пользователя и пароли не должны содержать пробелов", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val trimmedUsername = username.trim()
+            val trimmedPassword = password.trim()
+            val trimmedConfirmPassword = confirmPassword.trim()
+
+            if (trimmedUsername.isEmpty() || trimmedPassword.isEmpty() || trimmedConfirmPassword.isEmpty()) {
+                Toast.makeText(this, "Поля не должны состоять только из пробелов", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+
+            if (trimmedUsername.length < 4) {
                 Toast.makeText(this, "Имя пользователя должно содержать минимум 4 символа", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (password.length < 6) {
+            if (trimmedPassword.length < 6) {
                 Toast.makeText(this, "Пароль должен содержать минимум 6 символов", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (password != confirmPassword) {
+            if (trimmedPassword != trimmedConfirmPassword) {
                 Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -63,12 +78,13 @@ class SignUpActivity : AppCompatActivity() {
             val usersJson = prefs.getString(USERS_KEY, "[]")
             val userListType = object : TypeToken<MutableList<User>>() {}.type
             val users: MutableList<User> = gson.fromJson(usersJson, userListType) ?: mutableListOf()
-            if (users.any { it.username.equals(username, ignoreCase = true) }) {
+
+            if (users.any { it.username.equals(trimmedUsername, ignoreCase = true) }) {
                 Toast.makeText(this, "Пользователь с таким именем уже существует", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            users.add(User(username, password))
+            users.add(User(trimmedUsername, trimmedPassword))
 
             val editor = prefs.edit()
             editor.putString(USERS_KEY, gson.toJson(users))

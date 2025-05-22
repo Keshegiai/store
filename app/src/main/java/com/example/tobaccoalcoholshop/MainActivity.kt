@@ -19,19 +19,16 @@ class MainActivity : AppCompatActivity() {
     // Фрагменты
     private val catalogFragment by lazy { CatalogFragment() }
     private val favoritesFragment by lazy { FavoritesFragment() }
-    private val cartFragment by lazy { CartFragment() } // Добавлен CartFragment
+    private val cartFragment by lazy { CartFragment() }
     private lateinit var profileFragment: ProfileFragment
 
     private var currentUsername: String? = null
 
-    // Константы для SharedPreferences
     private val CREDENTIAL_SHARED_PREF = "our_shared_pref"
     private val LOGGED_IN_USER_KEY = "logged_in_username"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // --- ПРОВЕРКА СТАТУСА ВХОДА ---
         val prefs = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
         currentUsername = prefs.getString(LOGGED_IN_USER_KEY, null)
 
@@ -39,7 +36,6 @@ class MainActivity : AppCompatActivity() {
             navigateToLogin()
             return
         }
-        // --- КОНЕЦ ПРОВЕРКИ ВХОДА ---
 
         setContentView(R.layout.activity_main)
 
@@ -59,14 +55,14 @@ class MainActivity : AppCompatActivity() {
             val selectedFragment: Fragment = when (item.itemId) {
                 R.id.navigation_catalog -> catalogFragment
                 R.id.navigation_favorites -> favoritesFragment
-                R.id.navigation_cart -> cartFragment // Добавлена обработка корзины
+                R.id.navigation_cart -> cartFragment
                 R.id.navigation_profile -> profileFragment
                 else -> catalogFragment
             }
             switchToFragment(selectedFragment)
             true
         }
-        bottomNavigationView.setOnItemReselectedListener { /* No action */ }
+        bottomNavigationView.setOnItemReselectedListener { }
     }
 
     private fun switchToFragment(fragment: Fragment) {
@@ -75,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    // Методы для обновления других фрагментов
     fun refreshFavorites() {
         if (favoritesFragment.isAdded) {
             favoritesFragment.loadFavoriteProducts()
@@ -86,14 +81,6 @@ class MainActivity : AppCompatActivity() {
             catalogFragment.refreshDataAndView()
         }
     }
-    // Метод для обновления корзины (если понадобится извне)
-    fun refreshCart() {
-        if (cartFragment.isAdded && cartFragment.isVisible) {
-            // Возможно, понадобится метод в CartFragment для обновления
-            // cartFragment.loadCartDataAndUpdateUI() // Пример
-        }
-    }
-
 
     fun logoutUser() {
         val prefs = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)

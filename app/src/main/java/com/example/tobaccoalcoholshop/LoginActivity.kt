@@ -36,12 +36,26 @@ class LoginActivity : AppCompatActivity() {
         }
 
         btnLogin.setOnClickListener {
-            val username = edUsername.text.toString().trim()
-            val password = edPassword.text.toString().trim()
+            val username = edUsername.text.toString()
+            val password = edPassword.text.toString()
+
             if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Введите имя и пароль", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Имя пользователя и пароль не должны быть пустыми", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            if (username.contains(" ") || password.contains(" ")) {
+                Toast.makeText(this, "Имя пользователя и пароль не должны содержать пробелов", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val trimmedUsername = username.trim()
+            val trimmedPassword = password.trim()
+
+            if (trimmedUsername.isEmpty() || trimmedPassword.isEmpty()) {
+                Toast.makeText(this, "Имя пользователя и пароль не должны состоять только из пробелов", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
 
             val prefs = getSharedPreferences(CREDENTIAL_SHARED_PREF, Context.MODE_PRIVATE)
             val gson = Gson()
@@ -50,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
             val userListType = object : TypeToken<List<User>>() {}.type
             val users: List<User> = gson.fromJson(usersJson, userListType) ?: emptyList()
 
-            val user = users.find { it.username == username && it.password == password }
+            val user = users.find { it.username == trimmedUsername && it.password == trimmedPassword }
 
             if (user != null) {
                 val editor = prefs.edit()
@@ -63,7 +77,6 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } else {
-
                 Toast.makeText(this, "Неверное имя пользователя или пароль", Toast.LENGTH_SHORT).show()
             }
         }
